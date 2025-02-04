@@ -1,0 +1,15 @@
+.bg-light {
+    background-color: #fcf0e0 !important;
+}
+
+
+.btn-outline-success:hover {
+    color: #fff;
+    background-color: #f1735c;
+    border-color: #f1735c;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 4rem;
+    padding-left: .5rem;
+}
