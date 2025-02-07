@@ -10,7 +10,12 @@ urlpatterns = [
     path('',HomePage,name="Home"),
     path('pizza/',PizzaPage,name="pizza"),
     path("burgers/",BurgerPage,name="burgers"),
-    path('get-api/',getApi, name='get_api'),]
+    path("login/",LoginPage,name="login"),
+    path("register/",RegisterPage,name="register"),
+    path("logout'/",LogoutPage,name="logout"),
+    path('get-api/',getApi, name='get_api'),
+    
+    ]
 
 
 if settings.DEBUG:

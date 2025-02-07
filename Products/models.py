@@ -20,19 +20,18 @@ class Category(BaseModel):
     def __str__(self):
         return f"{self.cat_name}"
 
-class Customer(BaseModel):
+class Customer(BaseModel):  # You could extend AbstractBaseUser if you want custom user models
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=20)
-    
+    username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100)
-    password = models.CharField(max_length=50)
-    profile_image = models.ImageField(upload_to="upload/profile",null=True,blank=True)
+    password = models.CharField(max_length=255)  # Increased length to handle hashed passwords
+    profile_image = models.ImageField(upload_to="upload/profile", null=True, blank=True)
 
 
     def __str__(self):
-        return f"{self.first_name}{self.last_name}"
-
+        return f"{self.first_name} {self.last_name}"
 
 
 
