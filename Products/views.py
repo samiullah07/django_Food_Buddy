@@ -5,7 +5,6 @@ from .models import *
 
 
 def HomePage(request):
-    page = "Home"
 
     pro_objs = ProductDetail.objects.all()
 
@@ -13,28 +12,27 @@ def HomePage(request):
 
 
 
-    return render(request, "Index.html",{"page":page,"pro_objs":pro_objs})
+    return render(request, "Index.html",{"pro_objs":pro_objs})
 
 
 
 
 def getApi(request):
-    pro_objs = ProductDetail.objects.all()
-
-    product_name = request.GET.get("product-name")
-
-    if product_name:
-        pro_objs = pro_objs.filter(product_name__cat_name__icontains=product_name) 
     payload = []
 
-    for pro_obj in pro_objs:
+    orders = Order.objects.all()
+
+    for order in orders:
         payload.append({
-            "Id" : pro_obj.id,
-            "product-name" : pro_obj.product_name.cat_name,
-            "product_des" : pro_obj.product_des,
-            "product_price" : pro_obj.prduct_price,
-            "product_image" : str(pro_obj.product_image)
+            "Product Details" : order.productDetail.product_name,
+            "Price" : order.productDetail.prduct_price,
+            "Username" : order.customer.first_name,
+            "Address" : order.address,
+            "quantity" : order.quanitiy,
+            "date" : order.date,
+            "status" : order.status,
         })
+
 
 
     return JsonResponse(payload,safe=False)

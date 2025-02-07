@@ -43,6 +43,9 @@ class ProductDetail(BaseModel):
     prduct_price = models.IntegerField()
     product_image = models.ImageField(upload_to="upload/products")
 
+    is_sale = models.BooleanField(default=False)
+    sale_price = models.IntegerField()
+
 
     def __str__(self):
         return f"{self.product_name}"

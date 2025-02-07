@@ -134,7 +134,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Local folder where media files a
 
 
 # Static files settings
-STATIC_URL = '/static/'  # URL where static files will be accessible
+STATIC_URL = '/static/'  # URL wh ere static files will be accessible
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # For production (run `collectstatic` to copy files here)
 
 # For development, you can also define where static files will be placed in your project structure
