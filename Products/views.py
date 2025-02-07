@@ -14,6 +14,16 @@ def HomePage(request):
 
     return render(request, "Index.html",{"pro_objs":pro_objs})
 
+def PizzaPage(request):
+    pro_objs = ProductDetail.objects.filter(category__cat_name="Pizza")
+
+    return render(request,"pizza.html",{"pro_objs":pro_objs})
+
+
+def BurgerPage(request):
+    pro_objs = ProductDetail.objects.filter(category__cat_name="Burgers")
+
+    return render(request,"burgers.html",{"pro_objs":pro_objs})
 
 
 

@@ -7,8 +7,10 @@ from .views import *
 
 
 urlpatterns = [
-    path('',HomePage),
- path('get-api/',getApi, name='get_api'),]
+    path('',HomePage,name="Home"),
+    path('pizza/',PizzaPage,name="pizza"),
+    path("burgers/",BurgerPage,name="burgers"),
+    path('get-api/',getApi, name='get_api'),]
 
 
 if settings.DEBUG:
