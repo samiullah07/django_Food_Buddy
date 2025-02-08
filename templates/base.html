@@ -46,12 +46,13 @@
                         </li>
                     </ul>
                     <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
+                    
+                        {% if request.session.customer_username  %}
+                        <a href="{% url 'cart' %}" class="btn btn-outline-dark" type="submit">
                             <i class="bi-cart-fill me-1"></i>
                             Cart
                             <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button>
-                        {% if request.session.customer_username  %}
+                        </a>
                         <a href="{% url 'logout' %}" class="btn btn-outline-dark" >
                             Logout
                         </a>

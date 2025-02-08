@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
-@login_required(login_url="/login/")
+# @login_required(login_url="/login/")
 def HomePage(request):
 
     pro_objs = ProductDetail.objects.all()
@@ -20,14 +20,14 @@ def HomePage(request):
 
     return render(request, "Index.html",{"pro_objs":pro_objs})
 
-@login_required(login_url="/login/")
+# @login_required(login_url="/login/")
 def PizzaPage(request):
     pro_objs = ProductDetail.objects.filter(category__cat_name="Pizza")
 
     return render(request,"pizza.html",{"pro_objs":pro_objs})
 
 
-@login_required(login_url="/login/")
+# @login_required(login_url="/login/")
 def BurgerPage(request):
     pro_objs = ProductDetail.objects.filter(category__cat_name="Burgers")
 
@@ -49,7 +49,8 @@ def LoginPage(request):
                 # Check if the password matches
             if check_password(password, customer.password):
                     # Manually log the user in by creating a session
-                request.session['customer_username'] = customer.username  # Store the customer ID in the session
+                request.session['customer_username'] = customer.username  
+                # Store the customer ID in the session
                 return redirect("/")  # Redirect to homepage or any other page after successful login
             else:
                 message = "Incorrect password"
