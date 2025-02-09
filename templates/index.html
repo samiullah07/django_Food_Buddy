@@ -46,7 +46,7 @@
                            </div>
                            <!-- Product actions-->
                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                               <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                               <div class="text-center"><button class="btn btn-outline-dark mt-auto" id="add-cart" data-product-id="{{ pro_obj.id }}">Add to cart</button></div>
                            </div>
                        </div>
                    </div>
@@ -67,7 +67,7 @@
                                 </div>
                                 <!-- Product actions-->
                                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                                    <div class="text-center"><button class="btn btn-outline-dark mt-auto" id="add-cart" value="{{ pro_obj.id }}">Add to cart</button></div>
                                 </div>
                             </div>
                         </div>
@@ -81,5 +81,48 @@
                 </div>
             </div>
         </section>
+
+        <script>
+            // Check if button pressed
+            $(document).on('click', '#add-cart', function(e){
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'cart_add' %}",
+                    data: {
+                product_id: $('#add-cart').val(),
+                // product_qty: $('#qty-cart option:selected').text(),
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+                    },
+            
+                    success: function(json){
+                        console.log(json)
+                        // document.getElementById("cart_quantity").textContent = json.qty
+                        // location.reload();
+                    },
+            
+                    error: function(xhr, errmsg, err){
+                        console.log(errmsg, err)
+            
+                    }
+            
+            
+                });
+            
+            
+            
+            })
+            
+            
+            
+            
+            </script>
+            
+  
  
 {% endblock %}
+
+
+
+

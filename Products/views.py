@@ -1,11 +1,9 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from .models import *
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password,check_password
-from django.core.exceptions import ObjectDoesNotExist
+from .forms import SignUpForm
+from django.contrib import messages
 
 # Create your views here.
 
@@ -13,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 def HomePage(request):
 
     pro_objs = ProductDetail.objects.all()
+    
 
 
 
@@ -36,70 +35,74 @@ def BurgerPage(request):
 
 
 def LoginPage(request):
-    message = ""
-
     if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-            
-        try:
-                # Attempt to find the customer by username
-            customer = Customer.objects.get(username=username)
-                
-                # Check if the password matches
-            if check_password(password, customer.password):
-                    # Manually log the user in by creating a session
-                request.session['customer_username'] = customer.username  
-                # Store the customer ID in the session
-                return redirect("/")  # Redirect to homepage or any other page after successful login
-            else:
-                message = "Incorrect password"
-        except Customer.DoesNotExist:
-                message = "Customer not found"
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
         
-    return render(request, "login.html", {"message": message})
+        if user is not None:
+            # Successful login
+            login(request, user)
+
+            # Handle saved cart if available
+            current_user = Profile.objects.get(user=request.user)
+            saved_cart = current_user.old_cart
+            if saved_cart:
+                converted_cart = json.loads(saved_cart)
+                cart = Cart(request)
+                for key, value in converted_cart.items():
+                    cart.db_add(product=key, quantity=value)
+            
+            messages.success(request, "You have logged in successfully!")
+            return redirect('Home')  # Redirect to the home page after successful login
+        else:
+            messages.error(request, "Invalid login credentials. Please try again.")
+            return redirect('login')  # Stay on login page if authentication fails
+    else:
+        return render(request, 'login.html', {})
 
 
 
-@login_required(login_url="/login/")
 def LogoutPage(request):
+    """
+    Log the user out and redirect to home page with a success message.
+    """
     logout(request)
-    return redirect("/")
+    return redirect('Home')
 
 
 
 def RegisterPage(request):
-    message = ""
+    """
+    Handle user registration. If the form is valid, create a new user and log them in.
+    """
+    form = SignUpForm()
+
     if request.method == "POST":
-        first_name = request.POST["first_name"]
-        last_name = request.POST["last_name"]
-        username = request.POST["username"]
-        phone_number = request.POST["phone_number"]
-        email = request.POST["email"]
-        password = make_password(request.POST["password"])
-        profile_image = request.FILES.get("profile_image")
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            # Save the form data to create a user
+            user = form.save()
 
-        try:
-            # Check if the username already exists
-            customer = Customer.objects.get(username=username)
-            message = "Please Choose a Different Username or Email, the current one is not available."
-        except ObjectDoesNotExist:
-            # Create the customer object
-            customer = Customer.objects.create(
-                first_name=first_name,
-                last_name=last_name,
-                phone=phone_number,
-                email=email,
-                password=password,
-                profile_image=profile_image,
-                username=username
-            )
-            # Log the user in immediately after successful registration
-             # Log the user in
-            message = "User Registration Successful and Logged In"
-           
+            # Authenticate the user
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
 
-    return render(request, "Register.html", {"message": message})
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, "Account created successfully. Welcome!")
+                return redirect('Home')  # Redirect to the home page after login
+            else:
+                messages.error(request, "Login failed. Please try again.")
+                return redirect('login')  # Redirect back to login
+        else:
+            # Print form errors to debug why it's invalid
+            print(form.errors)  # Debugging purposes
+            messages.error(request, "Registration failed. Please try again.")
+            return redirect('register')  # Redirect back to register
+    else:
+        return render(request, 'register.html', {'form': form})
 
 def getApi(request):
     payload = []
