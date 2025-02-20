@@ -18,13 +18,13 @@
                              <h1>Shipping Information</h1>
         				<br/><br/>
 
-<form method="POST" action="{% url 'checkout' %}">
+<form method="POST" action="{% url 'card_info' %}">
     {% csrf_token %}
     
     {{ shipping_form.as_p }}
     <br/><br/>
     <button type="submit" class="btn btn-secondary">
-      Confirm Order
+        Add Card Details
     </button>
     <a href="{% url 'user_info' %}" class="btn btn-primary"> Change shipping address</a>
   
