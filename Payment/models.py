@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from Products.models import ProductDetail
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,pre_save
+import datetime
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -40,13 +42,22 @@ class Order(models.Model):
     email = models.CharField(max_length=50)
     shipping_address = models.TextField(max_length=1500)
     amount_paid = models.DecimalField(max_digits=7,decimal_places=2)
-    order_dated = models.DateField(auto_now_add=True)
+    date_ordered = models.DateTimeField(auto_now_add=True)
+    shipped = models.BooleanField(default=False)
+    shipped_date = models.DateTimeField(blank=True,null=True)
+
 
 
     def __str__(self):
         return f"Order - {str(self.id)}"
     
-
+@receiver(pre_save,sender=Order)
+def shipped_date_update(sender,instance,**kwargs):
+    if instance.pk:
+        now = datetime.datetime.now()
+        obj = sender._default_manager.get(pk=instance.pk)
+        if instance.shipped and not obj.shipped_date:
+            instance.shipped_date = now
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,on_delete=models.CASCADE,null=True)
@@ -54,6 +65,7 @@ class OrderItem(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
     price = models.DecimalField(max_digits=7,decimal_places=2)
     quantity = models.PositiveBigIntegerField(default=1)
+
 
 
     def __str__(self):

@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +30,8 @@ SECRET_KEY = 'django-insecure-ve*7bd@_f&4(5@2px)@j$ktjq3jh0br(n@9*lc-o!ny5ac^(@z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://djangotest.com', 'djangotest.com', 'django-ecommerce-production-81b6.up.railway.app', 'https://django-ecommerce-production-81b6.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://djangotest.com', 'https://django-ecommerce-production-81b6.up.railway.app']
 
 
 # Application definition
@@ -50,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'FastFood.urls'
@@ -79,8 +86,17 @@ WSGI_APPLICATION = 'FastFood.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        #sqlite3 database
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+
+        #postgresql
+        'ENGINE':'django.db.backends.postgresql',
+        'HOST':'shuttle.proxy.rlwy.net',
+        'PASSWORD': os.environ.get('postgres_password') ,
+        'PORT':'17207' ,
+        'USER':'postgres',
+        'NAME':'railway' ,
     }
 }
 
@@ -129,12 +145,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
 
-import os
 
 # Media settings to define where the files will be stored
 MEDIA_URL = '/media/'  # URL where media files will be accessible
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Local folder where media files are stored
 
+# White noise static stuff
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Static files settings
 STATIC_URL = '/static/'  # URL wh ere static files will be accessible
@@ -165,3 +183,5 @@ LOGGING = {
         },
     },
 }
+
+
