@@ -1,1 +1,1 @@
-web: gunicorn FastFood.wsgi:application
+web: gunicorn --bind=0.0.0.0:$PORT FastFood.wsgi:application
