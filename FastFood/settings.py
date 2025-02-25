@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'Products',
     'cart',
     'Payment',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
