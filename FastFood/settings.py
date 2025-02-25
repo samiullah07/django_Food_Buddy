@@ -169,3 +169,21 @@ STATICFILES_DIRS = [
 
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',  # Log errors (and above, e.g., CRITICAL)
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'error.log',  # Use the 'logs' folder for storing the log
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',  # Only log errors and higher severity
+            'propagate': True,
+        },
+    },
+}
