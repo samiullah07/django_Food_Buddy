@@ -1,2 +1,1 @@
-web: gunicorn Products.wsgi --log-file
-web: python manage.py migrate && gunicorn Products.wsgi
+web: python manage.py migrate && gunicorn Products.wsgi --log-file /path/to/your/logfile.log
